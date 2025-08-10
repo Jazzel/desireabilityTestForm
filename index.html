@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Adventure Form</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+
+        <!-- Page 1: Welcome -->
+        <div id="page1" class="form-page active">
+            <div class="page-content">
+                <h1>Discover Your Social Adventure Style</h1>
+                <p>A 2-min journey to find your perfect squad!</p>
+                <img src="assets/undraw_coffee-with-friends_ocg2.svg"
+                    alt="Friends enjoying coffee" class="illustration" />
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button next" onclick="nextPage(2)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 2: Disclaimer -->
+        <div id="page2" class="form-page ">
+            <div class="page-content">
+                <h1>Disclaimer</h1>
+                <h2>"Playful & Relatable"</h2>
+                <p>
+                    No trick questions here - promise <br />
+                    We're just trying to crack the code on how to make your social life
+                    10x better. Help us out by keeping it real!
+                </p>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(1)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(3)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 3: Are You Ready? -->
+        <div id="page3" class="form-page">
+            <div class="page-content">
+                <h1>Are You Ready?</h1>
+                <img src="assets/Brazuca - Standing.png"
+                    alt="Friends enjoying coffee" class="illustration" />
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(2)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(4)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 4: Personal Info -->
+        <div id="page4" class="form-page">
+            <div class="page-content">
+                <h1 class="main-title">About You</h1>
+                <div class="select">
+                    <select id="age" required aria-required="true">
+                        <option value="" hidden selected disabled>Select Age</option>
+                        <option value="under_18">Under 18</option>
+                        <option value="18-24">18-24</option>
+                        <option value="25-34">25-34</option>
+                        <option value="35-44">35-44</option>
+                        <option value="45+">45+</option>
+                    </select>
+                    <select id="gender" required aria-required="true">
+                        <option value="" hidden selected disabled>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not">Prefer not to say</option>
+                    </select>
+                    <select id="city" required aria-required="true">
+                        <option value="" hidden selected disabled>Select City</option>
+                        <option value="karachi">Karachi</option>
+                        <option value="hydrabad">Hydrabad</option>
+                        <option value="islamabad">Islamabad</option>
+                        <option value="rawalpindi">Rawalpindi</option>
+                        <option value="lahore">Lahore</option>
+                    </select>
+                </div>
+                <div class="error-message" id="gender-error">
+                    Please select your gender
+                </div>
+                <div class="error-message" id="city-error">
+                    Please select your city
+                </div>
+                <div class="error-message" id="age-error">
+                    Please select your age
+                </div>
+                <select id="occupation" required aria-required="true">
+                    <option value="" hidden selected disabled>Occupation</option>
+                    <option value="professional">Working Professional</option>
+                    <option value="student">Student</option>
+                    <option value="retired">Retired</option>
+                </select>
+                <div class="error-message" id="occupation-error">
+                    Please select your occupation
+                </div>
+                <input type="text" placeholder="Enter Your Full Name" id="fullName" required aria-required="true" />
+                <div class="error-message" id="name-error">
+                    Please enter your name
+                </div>
+
+
+                <input type="email" placeholder="Enter Your Email" id="email" required aria-required="true" />
+                <div class="error-message" id="email-error">
+                    Please enter a valid email
+                </div>
+
+                <input type="number" class="no-spinner" placeholder="Enter Your Phone No" id="phone"
+                    aria-required="true" />
+                <div class="error-message" id="phone-error">
+                    Please enter a valid phone number
+                </div>
+
+                
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(3)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(5)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 5: Ideal Weekend (Multiple Selection) -->
+        <div id="page5" class="form-page">
+            <div class="page-content">
+                <h1 class="main-title">What's Your Ideal Weekend?</h1>
+                <p class="multi-select-info">
+                    Select up to 3 options
+                    <span class="selected-count" data-group="weekend">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="weekend" value="netflix" class="hidden-radio"
+                            data-label="Chilling at home with Netflix" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🛋️</b> Chilling at home with Netflix</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="weekend" value="coffee" class="hidden-radio"
+                            data-label="Coffee with a close friend" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>☕</b> Coffee with a close friend</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="weekend" value="explore" class="hidden-radio"
+                            data-label="Exploring new spots with a group" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎉</b> Exploring new spots with a same group</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="weekend" value="outdoors" class="hidden-radio"
+                            data-label="Solo hiking or quiet time outdoors" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎤</b> Attending a local event or meetup </span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="weekend" value="outdoors" class="hidden-radio"
+                            data-label="Solo hiking or quiet time outdoors" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🍽️</b> Trying a new cafe or restaurant with someone new </span>
+                    </label>
+                </div>
+                <div class="error-message" id="weekend-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(4)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(6)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 6: Meeting New People -->
+        <div id="page6" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">
+                    How do you feel about meeting new people on a social app for spontaneous meetups?
+                </h1>
+                <p class="multi-select-info">
+                    Select up to 3 options
+                    <span class="selected-count" data-group="meeting">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="meeting" value="anxiety" class="hidden-radio"
+                            data-label="Social anxiety is real." onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>😬</b> Social anxiety is real.</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="meeting" value="love" class="hidden-radio"
+                            data-label="I love it! The more, the merrier!" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>😍</b> I love it! The more, the merrier!</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="meeting" value="okay" class="hidden-radio"
+                            data-label="It's okay if we have shared interests." onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🙂</b> It's okay if we have shared interests.</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="meeting" value="shy" class="hidden-radio"
+                            data-label="I'm shy, but I'll try." onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>😐</b> I'm shy, but I'll try.</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="meeting" value="shy" class="hidden-radio"
+                            data-label="I'm shy, but I'll try." onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b> 🤷 </b> I’m open to it, but it depends on the situation</span>
+                    </label>
+                </div>
+                <div class="error-message" id="meeting-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(5)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(7)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 7: Pick Your Vibe - Allow 4 selections -->
+        <div id="page7" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">Pick your vibe.</h1>
+                <p class="multi-select-info">
+                    Select up to 4 options
+                    <span class="selected-count" data-group="vibe">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="active" class="hidden-radio"
+                            data-label="Active & Adventurous" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🏋️</b> Active & Adventurous</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="curious" class="hidden-radio"
+                            data-label="Curious & Intellectual" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎓</b> Curious & Intellectual</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="creative" class="hidden-radio"
+                            data-label="Creative & Artsy" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎨</b> Creative & Artsy</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="chill" class="hidden-radio"
+                            data-label="Chill & Introverted" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🧘</b> Chill & Introverted</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="outdoors" class="hidden-radio"
+                            data-label="Nature & Outdoors" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🌳</b> Nature & Outdoors</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="foodie" class="hidden-radio"
+                            data-label="Foodie & Culinary" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🍔</b> Foodie & Culinary</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                    <label class="vibe-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="vibe" value="social" class="hidden-radio"
+                            data-label="Social Butterfly" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🦋</b> Social Butterfly</span>
+                        <span class="material-symbols-outlined">add</span>
+                    </label>
+                </div>
+                <div class="error-message" id="vibe-error">
+                    Please select 1-4 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(6)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(8)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 8: Great Energy -->
+        <div id="page8" class="form-page ">
+            <div class="page-content">
+                <h1>Great Energy</h1>
+                <img src="assets/undraw_well-done_kqud.svg"
+                    alt="Friends enjoying coffee" class="illustration" />
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(7)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(9)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 9: Trying New Things -->
+        <div id="page9" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">
+                    When was the last time you tried a new activity with someone? <h3>e.g., a new activity or place</h3>
+                </h1>
+                <p class="multi-select-info">Select one option</p>
+                <div class="radio-group">
+                    <label class="radio-option" role="radio" aria-checked="false">
+                        <input type="radio" name="new_things" value="last_week" class="hidden-radio"
+                            data-label="Last week!" onchange="updateRadioState(this)" />
+                        <span class="radio-label"><b>⏳</b> Last week!</span>
+                    </label>
+                    <label class="radio-option" role="radio" aria-checked="false">
+                        <input type="radio" name="new_things" value="last_month" class="hidden-radio"
+                            data-label="Last month" onchange="updateRadioState(this)" />
+                        <span class="radio-label"><b>🗓️</b> Last month</span>
+                    </label>
+                    <label class="radio-option" role="radio" aria-checked="false">
+                        <input type="radio" name="new_things" value="cant_remember" class="hidden-radio"
+                            data-label="Can't remember..." onchange="updateRadioState(this)" />
+                        <span class="radio-label"><b>📅</b> Can't remember...</span>
+                    </label>
+                </div>
+                <div class="error-message" id="new_things-error">
+                    Please select one option
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(8)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(10)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 10: Frustration Page -->
+        <div id="page10" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">Rate your frustration with these struggles</h1>
+                <div class="rating-container">
+                    <div class="rating-question">
+                        <div class="question-title">🎟️ No event buddies</div>
+                        <div class="stars" id="rating-1">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="rating-value" id="rating-value-1">0 rated</div>
+                    </div>
+
+                    <div class="rating-question">
+                        <div class="question-title"> 🔄 Stuck in a social rut</div>
+                        <div class="stars" id="rating-2">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="rating-value" id="rating-value-2">0 rated</div>
+                    </div>
+
+                    <div class="rating-question">
+                        <div class="question-title">🗣️ Struggling with starting conversations</div>
+                        <div class="stars" id="rating-3">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="rating-value" id="rating-value-3">0 rated</div>
+                    </div>
+                    <div class="rating-question">
+                        <div class="question-title">🧩 Difficulty finding people with similar interests</div>
+                        <div class="stars" id="rating-4">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="rating-value" id="rating-value-4">Not rated</div>
+                    </div>
+                    <div class="rating-question">
+                        <div class="question-title"> ⏳ No plans on short notice</div>
+                        <div class="stars" id="rating-5">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="rating-value" id="rating-value-5">0 rated</div>
+                    </div>
+                    <div class="rating-question">
+                        <div class="question-title">😔 Feeling isolated in a new place</div>
+                        <div class="stars" id="rating-6">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <div class="rating-value" id="rating-value-6">0 rated</div>
+                    </div>
+                </div>
+
+                <!-- <div class="error-message" id="frustrations-error">
+                    Please rate all frustrations
+                </div> -->
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(9)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(11)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 11: Meeting Blockers -->
+        <div id="page11" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">What stoppes you from meeting new people?</h1>
+                <p class="multi-select-info">
+                    Select up to 4 options
+                    <span class="selected-count" data-group="blockers">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="blockers" value="no_time" class="hidden-radio" data-label="No time"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🕒</b> No time</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="blockers" value="fear_rejection" class="hidden-radio"
+                            data-label="Fear of rejection" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>😰</b> Fear of rejection</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="blockers" value="dont_know" class="hidden-radio"
+                            data-label="Don't know where to start" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🌍</b> Unsure how to find local hangouts</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="blockers" value="no_interests" class="hidden-radio"
+                            data-label="No shared interests" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎵</b> Hard to find people with my vibe</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="blockers" value="no_interests" class="hidden-radio"
+                            data-label="No shared interests" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🛡️</b> Safety concerns</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="blockers" value="no_interests" class="hidden-radio"
+                            data-label="No shared interests" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>⚡</b> No easy way to connect instantly</span>
+                    </label>
+                </div>
+                <div class="error-message" id="blockers-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(10)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(12)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 12: Halfway -->
+        <div id="page12" class="form-page ">
+            <div class="page-content">
+                <h1>Halfway through killing it!</h1>
+                <img src="assets/undraw_waiting-for-you_xhp2.svg"
+                    alt="Friends enjoying coffee" class="illustration" />
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(11)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(13)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 13: Safe Fun Ways -->
+        <div id="page13" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">Would you try a SAFE, fun way to...?</h1>
+                <p class="multi-select-info">
+                    Select up to 2 options
+                    <span class="selected-count" data-group="safe_fun">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safe_fun" value="coffee_buddies" class="hidden-radio"
+                            data-label="Find coffee buddies who love your favorite books?"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>☕</b> Find coffee buddies who love your favorite books?</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safe_fun" value="group_outings" class="hidden-radio"
+                            data-label="Join group outings for concerts, hikes, or art shows"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎟️</b> Join group outings for concerts, hikes, or art shows</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safe_fun" value="roommates" class="hidden-radio"
+                            data-label="Connect with potential activity partners"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🗺️</b> Discover new local spots with others</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safe_fun" value="hangouts" class="hidden-radio"
+                            data-label="Plan last-minute hangouts without the hassle"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>📅</b> Plan last-minute hangouts without the hassle</span>
+                    </label>
+                </div>
+                <div class="error-message" id="safe_fun-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(12)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(14)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 14: Platform Likelihood -->
+        <div id="page14" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">
+                    How likely are you to join a platform that helps you:
+                </h1>
+                <p class="multi-select-info">
+                    Select up to 3 options
+                    <span class="selected-count" data-group="platform">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="platform" value="match_vibe" class="hidden-radio"
+                            data-label="Match with people who share your vibe" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🧑‍🤝‍🧑</b> Match with people who share your vibe</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="platform" value="meetups" class="hidden-radio"
+                            data-label="Host or join local meetups safely" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🎪</b> Host or join local meetups safely</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="platform" value="friendships" class="hidden-radio"
+                            data-label="Build real friendships (not just followers)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🤝</b> Build real friendships (not just followers)</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="platform" value="friendships" class="hidden-radio"
+                            data-label="Build real friendships (not just followers)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🕗</b> Plan spontaneous meetups with others</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="platform" value="friendships" class="hidden-radio"
+                            data-label="Build real friendships (not just followers)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label"><b>🤝</b>Discover new local activities with friends</span>
+                    </label>
+                </div>
+                <div class="error-message" id="platform-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(13)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(15)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 15: Biggest Challenges -->
+        <div id="page15" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title" style="text-align: left;">
+                    What are the biggest challenges you face when trying to meet new people or plan outings?
+                </h1>
+                <p class="multi-select-info">
+                    Select up to 3 options
+                    <span class="selected-count" data-group="challenges">0</span>
+                </p>
+                <div class="radio-group" style="text-align: left;">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="challenges" value="no_places" class="hidden-radio"
+                            data-label="I don’t know where to go or what places to visit"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🌍 I don’t know where to go or what places to visit</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="challenges" value="no_one" class="hidden-radio"
+                            data-label="I don’t have anyone to go with and feel isolated."
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">😞 I don’t have anyone to go with and feel isolated.</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="challenges" value="social_rut" class="hidden-radio"
+                            data-label="I’m stuck in a social rut and want to meet new people."
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🔄 I’m stuck in a social rut and want to meet new people.</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="challenges" value="shy" class="hidden-radio"
+                            data-label="I’m shy or experience social anxiety." onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">😳 I’m shy or experience social anxiety.</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="challenges" value="no_time" class="hidden-radio"
+                            data-label="I don’t have time due to a busy schedule."
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">⏰ I don’t have time due to a busy schedule.</span>
+                    </label>
+                </div>
+                <div class="error-message" id="challenges-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(14)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(16)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 16: Useful Features -->
+        <div id="page16" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">
+                    What features would you find most useful in an app that connects you with like-minded people?
+                </h1>
+                <p class="multi-select-info">
+                    Select up to 4 options
+                    <span class="selected-count" data-group="features">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="instant_meetups" class="hidden-radio"
+                            data-label="Instant meetup requests (e.g., 'Meet me at this cafe today!')"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">⏰ Instant meetup requests (e.g., "Meet me at this cafe today!")</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="interest_matching" class="hidden-radio"
+                            data-label="Interest-based matching (e.g., hiking, cafe hopping)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">❤️ Interest-based matching (e.g., hiking, cafe hopping)</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="location_suggestions" class="hidden-radio"
+                            data-label="Location-based suggestions for nearby hangouts"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">📍 Location-based suggestions for nearby hangouts</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="discover_places" class="hidden-radio"
+                            data-label="Discovering new places in my city" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🗺️ Discovering new places in my city</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="regular_activities" class="hidden-radio"
+                            data-label="Finding people for regular activities (e.g., weekly hikes)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🔄 Finding people for regular activities (e.g., weekly hikes)</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="group_activities" class="hidden-radio"
+                            data-label="Group activities or events" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🎉 Group activities or events</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="features" value="profile_previews" class="hidden-radio"
+                            data-label="Profile previews before connecting" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">👀 Profile previews before connecting</span>
+                    </label>
+                </div>
+                <div class="error-message" id="features-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(15)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(17)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 17: Safety Features -->
+        <div id="page17" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">
+                    What safety features would make you feel more comfortable meeting strangers through an app?
+                </h1>
+                <p class="multi-select-info">
+                    Select up to 2 options
+                    <span class="selected-count" data-group="safety">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safety" value="verification" class="hidden-radio"
+                            data-label="User verification (e.g., ID check or social media linking)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">✅ User verification (e.g., ID check or social media linking)</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safety" value="ratings" class="hidden-radio"
+                            data-label="Ratings or reviews of other users" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">⭐ Ratings or reviews of other users</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safety" value="emergency" class="hidden-radio"
+                            data-label="Emergency contact options or safety alerts"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🔔 Emergency contact options or safety alerts</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="safety" value="in_app_messaging" class="hidden-radio"
+                            data-label="In-app messaging only" onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">💬 In-app messaging only</span>
+                    </label>
+                </div>
+                <div class="error-message" id="safety-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(16)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(18)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 18: App Scenarios -->
+        <div id="page18" class="form-page ">
+            <div class="page-content">
+                <h1 class="main-title">
+                    Which of these scenarios would you most likely use the app for?
+                </h1>
+                <p class="multi-select-info">
+                    Select up to 3 options
+                    <span class="selected-count" data-group="scenarios">0</span>
+                </p>
+                <div class="radio-group">
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="scenarios" value="coffee_buddies" class="hidden-radio"
+                            data-label="Finding coffee buddies who love my favorite books or hobbies"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">☕📚 Finding coffee buddies who love my favorite books or
+                            hobbies</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="scenarios" value="group_outings" class="hidden-radio"
+                            data-label="Joining group outings for hikes, concerts, or art shows"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">🌄🎵 Joining group outings for hikes, concerts, or art shows</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="scenarios" value="activity_partners" class="hidden-radio"
+                            data-label="Connecting with potential activity partners (e.g., gym, games)"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">💪🎮 Connecting with potential activity partners (e.g., gym,
+                            games)</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="scenarios" value="spontaneous_outings" class="hidden-radio"
+                            data-label="Finding someone to join me for a spontaneous outing"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">⚡ Finding someone to join me for a spontaneous outing</span>
+                    </label>
+                    <label class="radio-option" role="checkbox" aria-checked="false">
+                        <input type="checkbox" name="scenarios" value="last_minute" class="hidden-radio"
+                            data-label="Planning last-minute hangouts without the hassle"
+                            onchange="updateCheckboxState(this)" />
+                        <span class="radio-label">⏳ Planning last-minute hangouts without the hassle</span>
+                    </label>
+                </div>
+                <div class="error-message" id="scenarios-error">
+                    Please select 1-2 options
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(17)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button class="nav-button next" onclick="nextPage(19)">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page 19: Completion -->
+        <div id="page19" class="form-page">
+            <div class="page-content">
+                <h1>You did it!</h1>
+                <h2>One last click</h2>
+                <img src="assets/undraw_completed_0sqh.svg"
+                    alt="Completion illustration" class="illustration" style="width: 50%" />
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button prev" onclick="prevPage(18)">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                <button id="submit-btn">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

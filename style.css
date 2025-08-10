@@ -1,0 +1,960 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+:root {
+    --primary-color: #2f80ed;
+    --secondary-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+    --selected-color: rgba(47, 128, 237, 0.1);
+    --success-color: #27ae60;
+    --error-color: #e74c3c;
+    --star-color: #FFD700;
+    --star-hover: #FFC107;
+    --unrated-color: #ccc;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+#progress {
+    height: 4px;
+    background: #e0e0e0;
+    width: 100%;
+    z-index: 10;
+}
+
+#progress-bar {
+    height: 100%;
+    background: var(--primary-color);
+    width: 10%;
+    transition: width 0.3s ease;
+}
+
+.form-page {
+    display: none;
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1;
+}
+
+.active {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 2;
+}
+
+.page-content {
+    flex: 1;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Unified heading styles for specific pages */
+#page4 .main-title,
+#page5 .main-title,
+#page6 .main-title,
+#page7 .main-title,
+#page9 .main-title,
+#page10 .main-title,
+#page11 .main-title,
+#page13 .main-title,
+#page14 .main-title,
+#page15 .main-title,
+#page16 .main-title,
+#page17 .main-title,
+#page18 .main-title {
+    color: var(--primary-color);
+    font-size: 2.4rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Unified heading styles for illustration pages */
+#page3 h1,
+#page8 h1,
+#page12 h1,
+#page19 h1 {
+    color: var(--primary-color);
+    font-size: 3.0rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-title {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+h3 {
+    color: var(--primary-color);
+}
+
+h2 {
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+}
+
+p {
+    color: var(--text-color);
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    position: relative;
+    min-height: 80px;
+}
+
+.nav-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(47, 128, 237, 0.3);
+    transition: all 0.2s ease;
+    position: absolute;
+}
+
+.nav-buttons .prev {
+    left: 20px;
+    bottom: 20px;
+}
+
+.nav-buttons .next {
+    right: 20px;
+    bottom: 20px;
+}
+
+.nav-button.submit {
+    background-color: var(--success-color);
+    right: 20px;
+    bottom: 20px;
+}
+
+.nav-button:hover {
+    transform: scale(1.05);
+}
+
+.nav-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.nav-button span {
+    font-size: 24px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input::placeholder {
+    color: #000000;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.2);
+}
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spinner {
+    -moz-appearance: textfield;
+}
+
+.select {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1%;
+}
+
+.select select {
+    width: 32%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.radio-group {
+    margin-bottom: 20px;
+}
+
+.radio-option {
+    display: block;
+    margin-bottom: 12px;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.radio-option:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(47, 128, 237, 0.05);
+}
+
+.hidden-radio {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-label {
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+}
+
+.radio-option.active {
+    border-color: var(--primary-color);
+    background-color: var(--selected-color);
+}
+
+.radio-option.active .radio-label {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.radio-option.active .radio-label b {
+    font-size: 1.5rem;
+}
+
+.illustration {
+    width: 90%;
+    height: auto;
+    margin: 0 auto 20px;
+    max-width: 330px;
+    display: block;
+    background: center/contain no-repeat;
+}
+
+#page1 {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+}
+
+#page1 .page-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#page1 h1 {
+    width: 80%;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    text-align: left;
+    line-height: 1.2;
+    margin-top: 10px;
+}
+
+#page1 p {
+    color: #e0e0e0;
+    margin: 0 0 30px 0;
+    width: 80%;
+    text-align: left;
+}
+
+#page1 button {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+#page2 .page-content,
+#page15 .page-content {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#page2 .page-content h1 {
+    color: var(--primary-color);
+    font-size: 4rem;
+    margin: 0 0 10px 0;
+}
+
+#page2 .page-content h2,
+#page15 .page-content h2 {
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    margin: 0 0 40px 0;
+}
+
+#page15 .page-content h2 {
+    margin: 0 0 20px 0;
+    font-size: 2.0rem;
+}
+
+#page2 .page-content p {
+    width: 70%;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #555;
+}
+
+#page2 .nav-buttons .prev span {
+    display: block;
+    margin: auto;
+}
+
+/* 
+        #page2 {
+            position: relative;
+            overflow: hidden;
+            color: var(--text-color);
+        } */
+
+#page2 .nav-buttons .next {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+/* Unified styles for illustration pages */
+#page3 .page-content,
+#page8 .page-content,
+#page12 .page-content,
+#page19 .page-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+#page19 h2 {
+    margin-bottom: 20px;
+}
+
+/* Page 7: Vibe Selection Styles - Fixed */
+#page7 .radio-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 13px;
+}
+
+#page7 .vibe-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    min-height: 60px;
+}
+
+#page7 .vibe-option:hover,
+#page7 .radio-option:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+#page7 .active {
+    display: flex;
+    flex-direction: row;
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 2;
+}
+
+#page7 .vibe-option.active {
+    border-color: var(--primary-color);
+    background-color: var(--selected-color);
+    box-shadow: 0 6px 16px rgba(47, 128, 237, 0.2);
+}
+
+#page7 .vibe-option .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+    flex: 1;
+}
+
+#page7 .vibe-option .radio-label b {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+#page7 .vibe-option.active .radio-label {
+    color: var(--primary-color);
+}
+
+#page7 .vibe-option .material-symbols-outlined {
+    font-size: 24px;
+    color: #ccc;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+#page7 .vibe-option.active .material-symbols-outlined,
+#page7 .vibe-option:hover .material-symbols-outlined {
+    color: var(--primary-color);
+}
+
+.multi-select-info {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.selected-count {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.85rem;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    display: none;
+    text-align: center;
+    padding: 10px;
+    background: #ffebee;
+    border-radius: 8px;
+}
+
+.has-error {
+    border-color: var(--error-color) !important;
+}
+
+.has-error+.error-message {
+    display: block;
+}
+
+#submit-btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(47, 128, 237, 0.3);
+    transition: all 0.2s ease;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+}
+
+#submit-btn:hover {
+    transform: scale(1.05);
+}
+
+.submitting {
+    position: relative;
+    padding-right: 30px !important;
+}
+
+.submitting::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+/* Animation Enhancements */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.05);
+    }
+
+    60% {
+        transform: scale(0.95);
+    }
+}
+
+.radio-option,
+.vibe-option {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.radio-option:hover,
+.vibe-option:hover {
+    animation: bounce 0.5s ease;
+}
+
+.nav-button {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Star rating styles for page10 */
+.rating-container {
+    margin-bottom: 30px;
+}
+
+.rating-question {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.question-title {
+    font-size: 1.0rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.star {
+    font-size: 2.2rem;
+    color: var(--unrated-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.star.filled {
+    color: var(--star-color);
+}
+
+.star:hover {
+    color: var(--star-hover);
+    transform: scale(1.1);
+}
+
+/* .star:hover::before {
+    content: attr(data-value);
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+} */
+
+.rating-value {
+    text-align: center;
+    margin-top: 8px;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1.0rem;
+    min-height: 20px;
+}
+
+@media (max-width: 768px) {
+    #page7 .radio-group {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+
+    .page-content {
+        padding: 10px;
+    }
+
+    #page1 h1 {
+        font-size: 2.2rem;
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    #page1 p {
+        margin: 0 auto 30px;
+        width: 90%;
+    }
+
+    #page2 .page-content h1 {
+        font-size: 2.3rem;
+    }
+
+    #page2 .page-content h2 {
+        font-size: 1.3rem;
+        margin-bottom: 30px;
+    }
+
+    #page2 .page-content p {
+        width: 90%;
+    }
+
+    .main-title {
+        font-size: 1.8rem;
+    }
+
+    .select {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .select select {
+        width: 100%;
+    }
+
+    /* Unified heading adjustments for mobile */
+    #page4 .main-title,
+    #page5 .main-title,
+    #page6 .main-title,
+    #page7 .main-title,
+    #page9 .main-title,
+    #page10 .main-title,
+    #page11 .main-title,
+    #page13 .main-title,
+    #page14 .main-title,
+    #page15 .main-title,
+    #page16 .main-title,
+    #page17 .main-title,
+    #page18 .main-title {
+        font-size: 2.2rem;
+    }
+
+    #page3 h1,
+    #page8 h1,
+    #page12 h1,
+    #page19 h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 456px) {
+
+    /* Reduce padding to fit content better */
+    .form-page {
+        padding: 15px;
+    }
+
+    .page-content {
+        padding: 5px;
+    }
+
+    /* Make nav buttons area smaller */
+    .nav-buttons {
+        padding: 15px;
+        min-height: 70px;
+    }
+
+    .nav-button {
+        width: 45px;
+        height: 45px;
+    }
+
+    .nav-button span {
+        font-size: 20px;
+    }
+
+    /* Reduce margins and padding for better space utilization */
+    .radio-option {
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+
+    .rating-question {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .question-title {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+
+    .star {
+        font-size: 2rem;
+    }
+
+    .rating-value {
+        font-size: 0.9rem;
+        margin-top: 6px;
+        min-height: 18px;
+    }
+
+    /* Tighter spacing for inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    select {
+        padding: 10px 12px;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Reduce illustration size */
+    .illustration {
+        max-width: 280px;
+        margin-bottom: 15px;
+    }
+
+    /* Smaller paragraph margins */
+    p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    /* Reduce multi-select info margins */
+    .multi-select-info {
+        margin-bottom: 12px;
+    }
+
+    /* Page specific adjustments */
+    #page1,
+    #page2,
+    #page3,
+    #page8,
+    #page12,
+    #page19{
+        padding: 0px;
+        height: calc(93vh - 1px);
+    }
+
+    #page4,
+    #page5,
+    #page6,
+    #page7,
+    #page9,
+    #page10,
+    #page14,
+    #page15,
+    #page16,
+    #page17,
+    #page18,
+    #page11{
+        height: calc(93vh - 1px);
+
+    }
+
+    #page1 .page-content,
+    #page2 .page-content {
+        padding: 30px;
+        text-align: center;
+    }
+
+    #page1 h1 {
+        font-size: 2.5rem;
+        width: 95%;
+    }
+
+    #page2 {
+        padding: 0px;
+    }
+
+    #page2 .page-content h1 {
+        font-size: 3.2rem;
+        color: var(--primary-color);
+    }
+
+    #page2 .page-content h2 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    /* Unified heading sizes for small screens */
+    #page4 .main-title,
+    #page5 .main-title,
+    #page6 .main-title,
+    #page7 .main-title,
+    #page9 .main-title,
+    #page10 .main-title,
+    #page11 .main-title,
+    #page13 .main-title,
+    #page14 .main-title,
+    #page15 .main-title,
+    #page16 .main-title,
+    #page17 .main-title,
+    #page18 .main-title {
+        font-size: 2rem;
+        margin-bottom: 12px;
+    }
+
+    #page3 h1,
+    #page8 h1,
+    #page12 h1,
+    #page19 h1 {
+        font-size: 3.2rem;
+        margin-bottom: 15px;
+    }
+
+    #page19 h2 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    #page7 .vibe-option {
+        min-height: 50px;
+        padding: 12px 15px;
+    }
+
+    #submit-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 375px) {
+
+    /* Extra small screens - even tighter spacing */
+    .form-page {
+        padding: 12px;
+    }
+
+    .nav-buttons {
+        padding: 12px;
+        min-height: 65px;
+    }
+
+    .rating-question {
+        padding: 10px;
+        margin-bottom: 12px;
+    }
+
+    .star {
+        font-size: 1.8rem;
+        gap: 6px;
+    }
+
+    .stars {
+        gap: 6px;
+    }
+}
