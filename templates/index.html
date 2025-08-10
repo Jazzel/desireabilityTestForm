@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -27,7 +27,7 @@
             <div class="page-content">
                 <h1>Discover Your Social Adventure Style</h1>
                 <p>A 2-min journey to find your perfect squad!</p>
-                <img src="assets/undraw_coffee-with-friends_ocg2.svg"
+                <img src="{{ url_for('static', filename='images/undraw_coffee-with-friends_ocg2.svg') }}"
                     alt="Friends enjoying coffee" class="illustration" />
             </div>
             <div class="nav-buttons">
@@ -62,7 +62,7 @@
         <div id="page3" class="form-page">
             <div class="page-content">
                 <h1>Are You Ready?</h1>
-                <img src="assets/Brazuca - Standing.png"
+                <img src="{{ url_for('static', filename='images/Brazuca - Standing.png') }}"
                     alt="Friends enjoying coffee" class="illustration" />
             </div>
             <div class="nav-buttons">
@@ -321,7 +321,7 @@
         <div id="page8" class="form-page ">
             <div class="page-content">
                 <h1>Great Energy</h1>
-                <img src="assets/undraw_well-done_kqud.svg"
+                <img src="{{ url_for('static', filename='images/undraw_well-done_kqud.svg') }}"
                     alt="Friends enjoying coffee" class="illustration" />
             </div>
             <div class="nav-buttons">
@@ -519,7 +519,7 @@
         <div id="page12" class="form-page ">
             <div class="page-content">
                 <h1>Halfway through killing it!</h1>
-                <img src="assets/undraw_waiting-for-you_xhp2.svg"
+                <img src="{{ url_for('static', filename='images/undraw_waiting-for-you_xhp2.svg') }}"
                     alt="Friends enjoying coffee" class="illustration" />
             </div>
             <div class="nav-buttons">
@@ -865,7 +865,7 @@
             <div class="page-content">
                 <h1>You did it!</h1>
                 <h2>One last click</h2>
-                <img src="assets/undraw_completed_0sqh.svg"
+                <img src="{{ url_for('static', filename='images/undraw_completed_0sqh.svg') }}"
                     alt="Completion illustration" class="illustration" style="width: 50%" />
             </div>
             <div class="nav-buttons">
@@ -877,7 +877,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 
 </html>
