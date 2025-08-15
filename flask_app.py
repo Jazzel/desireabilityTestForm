@@ -51,7 +51,7 @@ def init_database():
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 full_name VARCHAR(255),
                 gender VARCHAR(50),
-                age INT,
+                age VARCHAR(50),
                 city VARCHAR(100),
                 email VARCHAR(255),
                 phone VARCHAR(20),
@@ -63,16 +63,16 @@ def init_database():
                 frustration_short_notice INT DEFAULT 0,
                 frustration_isolated_new_place INT DEFAULT 0,
                 weekend_options TEXT,
-                meeting_feeling TEXT,
+                feel_meeting_new_people TEXT,
                 vibe_selections TEXT,
-                last_new_thing TEXT,
-                meeting_blocker TEXT,
-                safe_fun_option TEXT,
-                platform_likelihood TEXT,
-                challenges TEXT,
-                features TEXT,
-                safety TEXT,
-                scenarios TEXT,
+                tried_new_people_last_time TEXT,
+                meeting_blocker_to_meet_new_people TEXT,
+                safe_fun_way_to TEXT,
+                platform_join_likey_to TEXT,
+                challenges_you_face_when_trying_to_meet_new_people  TEXT,
+                likely_features_in_app TEXT,
+                safety_features_in_app TEXT,
+                scenarios_to_use_app_for TEXT,
                 submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
@@ -151,15 +151,17 @@ def handle_form_submission():
                 frustration_no_buddies, frustration_social_rut,
                 frustration_starting_convos, frustration_similar_interests,
                 frustration_short_notice, frustration_isolated_new_place,
-                weekend_options, meeting_feeling, vibe_selections,
-                last_new_thing, meeting_blocker, safe_fun_option,
-                platform_likelihood, challenges, features, safety, scenarios,
-                submission_date
+                weekend_options, feel_meeting_new_people, vibe_selections,
+                tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                safe_fun_way_to, platform_join_likey_to,
+                challenges_you_face_when_trying_to_meet_new_people,
+                likely_features_in_app, safety_features_in_app,
+                scenarios_to_use_app_for, submission_date
             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 personal_info.get('name', ''),
                 personal_info.get('gender', ''),
-                personal_info.get('age', 0),
+                personal_info.get('age', ''),
                 personal_info.get('city', ''),
                 personal_info.get('email', ''),
                 personal_info.get('phone', ''),
@@ -232,10 +234,12 @@ def get_answers_route():
                    frustration_no_buddies, frustration_social_rut,
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
-                   weekend_options, meeting_feeling, vibe_selections,
-                   last_new_thing, meeting_blocker, safe_fun_option,
-                   platform_likelihood, challenges, features, safety, scenarios,
-                   submission_date
+                   weekend_options, feel_meeting_new_people, vibe_selections,
+                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   safe_fun_way_to, platform_join_likey_to,
+                   challenges_you_face_when_trying_to_meet_new_people,
+                   likely_features_in_app, safety_features_in_app,
+                   scenarios_to_use_app_for, submission_date
             FROM desirability_form_responses
         """
         
@@ -303,10 +307,12 @@ def get_single_answer(response_id):
                    frustration_no_buddies, frustration_social_rut,
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
-                   weekend_options, meeting_feeling, vibe_selections,
-                   last_new_thing, meeting_blocker, safe_fun_option,
-                   platform_likelihood, challenges, features, safety, scenarios,
-                   submission_date
+                   weekend_options, feel_meeting_new_people, vibe_selections,
+                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   safe_fun_way_to, platform_join_likey_to,
+                   challenges_you_face_when_trying_to_meet_new_people,
+                   likely_features_in_app, safety_features_in_app,
+                   scenarios_to_use_app_for, submission_date
             FROM desirability_form_responses
             WHERE id = %s
         """, (response_id,))
@@ -364,16 +370,17 @@ def get_answers_summary():
         """)
         gender_stats = cursor.fetchall()
         
-        # Get age statistics
+        # Get age statistics - Updated for VARCHAR age field
         cursor.execute("""
             SELECT 
-                AVG(age) as avg_age,
-                MIN(age) as min_age,
-                MAX(age) as max_age
+                age as age_range,
+                COUNT(*) as count
             FROM desirability_form_responses 
-            WHERE age > 0
+            WHERE age IS NOT NULL AND age != ''
+            GROUP BY age 
+            ORDER BY COUNT(*) DESC
         """)
-        age_stats = cursor.fetchone()
+        age_stats = cursor.fetchall()
         
         # Get top cities
         cursor.execute("""
@@ -450,10 +457,12 @@ def export_data():
                    frustration_no_buddies, frustration_social_rut,
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
-                   weekend_options, meeting_feeling, vibe_selections,
-                   last_new_thing, meeting_blocker, safe_fun_option,
-                   platform_likelihood, challenges, features, safety, scenarios,
-                   submission_date
+                   weekend_options, feel_meeting_new_people, vibe_selections,
+                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   safe_fun_way_to, platform_join_likey_to,
+                   challenges_you_face_when_trying_to_meet_new_people,
+                   likely_features_in_app, safety_features_in_app,
+                   scenarios_to_use_app_for, submission_date
             FROM desirability_form_responses
             ORDER BY submission_date DESC
         """)
@@ -537,16 +546,16 @@ def powerbi_endpoint():
                 frustration_short_notice as frustration_score_short_notice,
                 frustration_isolated_new_place as frustration_score_isolated_new_place,
                 weekend_options,
-                meeting_feeling,
+                feel_meeting_new_people,
                 vibe_selections,
-                last_new_thing,
-                meeting_blocker,
-                safe_fun_option,
-                platform_likelihood,
-                challenges,
-                features,
-                safety,
-                scenarios,
+                tried_new_people_last_time,
+                meeting_blocker_to_meet_new_people,
+                safe_fun_way_to,
+                platform_join_likey_to,
+                challenges_you_face_when_trying_to_meet_new_people,
+                likely_features_in_app,
+                safety_features_in_app,
+                scenarios_to_use_app_for,
                 DATE(submission_date) as submission_date,
                 TIME(submission_date) as submission_time
             FROM desirability_form_responses

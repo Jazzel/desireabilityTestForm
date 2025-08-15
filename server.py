@@ -1,11 +1,13 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from flask_cors import CORS
-import sqlite3
+import pymysql
 import logging
 import traceback
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+import io
+import csv
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)
@@ -16,54 +18,73 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-# Database configuration
-DATABASE_PATH = os.getenv('DATABASE_PATH', 'desirability_form.db')
-
-def init_database():
-    """Initialize the SQLite database and create tables if they don't exist"""
-    conn = sqlite3.connect(DATABASE_PATH)
-    cursor = conn.cursor()
-    
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS desirability_form_responses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            full_name TEXT,
-            gender TEXT,
-            age INTEGER,
-            city TEXT,
-            email TEXT,
-            phone TEXT,
-            occupation TEXT,
-            frustration_no_buddies INTEGER DEFAULT 0,
-            frustration_social_rut INTEGER DEFAULT 0,
-            frustration_starting_convos INTEGER DEFAULT 0,
-            frustration_similar_interests INTEGER DEFAULT 0,
-            frustration_short_notice INTEGER DEFAULT 0,
-            frustration_isolated_new_place INTEGER DEFAULT 0,
-            weekend_options TEXT,
-            meeting_feeling TEXT,
-            vibe_selections TEXT,
-            last_new_thing TEXT,
-            meeting_blocker TEXT,
-            safe_fun_option TEXT,
-            platform_likelihood TEXT,
-            challenges TEXT,
-            features TEXT,
-            safety TEXT,
-            scenarios TEXT,
-            submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    
-    conn.commit()
-    conn.close()
-    logger.info(f"Database initialized at {DATABASE_PATH}")
+# Database configuration for PythonAnywhere MySQL
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST', 'junoform.mysql.pythonanywhere-services.com'),
+    'user': os.getenv('DB_USER', 'junoform'),
+    'password': os.getenv('DB_PASSWORD', '4d7CDntp6rZ6Xud'),
+    'database': os.getenv('DB_NAME', 'junoform$default'),
+    'port': int(os.getenv('DB_PORT', 3306)),
+    'charset': 'utf8mb4'
+}
 
 def get_db_connection():
-    """Get SQLite database connection"""
-    conn = sqlite3.connect(DATABASE_PATH)
-    conn.row_factory = sqlite3.Row  # This allows dict-like access to rows
-    return conn
+    """Get MySQL database connection"""
+    return pymysql.connect(
+        host=DB_CONFIG['host'],
+        user=DB_CONFIG['user'],
+        password=DB_CONFIG['password'],
+        database=DB_CONFIG['database'],
+        port=DB_CONFIG['port'],
+        charset=DB_CONFIG['charset'],
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+def init_database():
+    """Initialize the MySQL database and create tables if they don't exist"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS desirability_form_responses (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                full_name VARCHAR(255),
+                gender VARCHAR(50),
+                age VARCHAR(50),
+                city VARCHAR(100),
+                email VARCHAR(255),
+                phone VARCHAR(20),
+                occupation VARCHAR(255),
+                frustration_no_buddies INT DEFAULT 0,
+                frustration_social_rut INT DEFAULT 0,
+                frustration_starting_convos INT DEFAULT 0,
+                frustration_similar_interests INT DEFAULT 0,
+                frustration_short_notice INT DEFAULT 0,
+                frustration_isolated_new_place INT DEFAULT 0,
+                weekend_options TEXT,
+                feel_meeting_new_people TEXT,
+                vibe_selections TEXT,
+                tried_new_people_last_time TEXT,
+                meeting_blocker_to_meet_new_people TEXT,
+                safe_fun_way_to TEXT,
+                platform_join_likey_to TEXT,
+                challenges_you_face_when_trying_to_meet_new_people  TEXT,
+                likely_features_in_app TEXT,
+                safety_features_in_app TEXT,
+                scenarios_to_use_app_for TEXT,
+                submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        logger.info("Database table initialized successfully")
+        
+    except pymysql.Error as e:
+        logger.error(f"Failed to initialize database: {e}")
+        raise
 
 def get_answers(form_data, response_name):
     """Safely extract answers for a response group"""
@@ -130,15 +151,17 @@ def handle_form_submission():
                 frustration_no_buddies, frustration_social_rut,
                 frustration_starting_convos, frustration_similar_interests,
                 frustration_short_notice, frustration_isolated_new_place,
-                weekend_options, meeting_feeling, vibe_selections,
-                last_new_thing, meeting_blocker, safe_fun_option,
-                platform_likelihood, challenges, features, safety, scenarios,
-                submission_date
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                weekend_options, feel_meeting_new_people, vibe_selections,
+                tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                safe_fun_way_to, platform_join_likey_to,
+                challenges_you_face_when_trying_to_meet_new_people,
+                likely_features_in_app, safety_features_in_app,
+                scenarios_to_use_app_for, submission_date
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 personal_info.get('name', ''),
                 personal_info.get('gender', ''),
-                personal_info.get('age', 0),
+                personal_info.get('age', ''),
                 personal_info.get('city', ''),
                 personal_info.get('email', ''),
                 personal_info.get('phone', ''),
@@ -161,7 +184,7 @@ def handle_form_submission():
                 get_answers(form_data, 'features'),
                 get_answers(form_data, 'safety'),
                 get_answers(form_data, 'scenarios'),
-                datetime.now().isoformat()
+                datetime.now()
             ))
         
         conn.commit()
@@ -172,11 +195,11 @@ def handle_form_submission():
             'submission_id': cursor.lastrowid
         })
         
-    except sqlite3.Error as e:
-        logger.error(f"SQLite Error: {str(e)}")
+    except pymysql.Error as e:
+        logger.error(f"MySQL Error [{e.args[0]}]: {e.args[1]}")
         return jsonify({
             'success': False,
-            'error': f"Database error: {str(e)}"
+            'error': f"Database error: {e.args[1]}"
         }), 500
     except Exception as e:
         logger.error(f"Error: {str(e)}\n{traceback.format_exc()}")
@@ -211,35 +234,31 @@ def get_answers_route():
                    frustration_no_buddies, frustration_social_rut,
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
-                   weekend_options, meeting_feeling, vibe_selections,
-                   last_new_thing, meeting_blocker, safe_fun_option,
-                   platform_likelihood, challenges, features, safety, scenarios,
-                   submission_date
+                   weekend_options, feel_meeting_new_people, vibe_selections,
+                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   safe_fun_way_to, platform_join_likey_to,
+                   challenges_you_face_when_trying_to_meet_new_people,
+                   likely_features_in_app, safety_features_in_app,
+                   scenarios_to_use_app_for, submission_date
             FROM desirability_form_responses
         """
         
         params = []
         if email_filter:
-            base_query += " WHERE email LIKE ?"
+            base_query += " WHERE email LIKE %s"
             params.append(f"%{email_filter}%")
             
-        base_query += " ORDER BY submission_date DESC LIMIT ? OFFSET ?"
+        base_query += " ORDER BY submission_date DESC LIMIT %s OFFSET %s"
         params.extend([limit, offset])
         
         cursor.execute(base_query, params)
         results = cursor.fetchall()
         
-        # Convert sqlite3.Row objects to dictionaries
-        responses = []
-        for row in results:
-            response_dict = dict(row)
-            responses.append(response_dict)
-        
         # Get total count for pagination info
         count_query = "SELECT COUNT(*) as total FROM desirability_form_responses"
         count_params = []
         if email_filter:
-            count_query += " WHERE email LIKE ?"
+            count_query += " WHERE email LIKE %s"
             count_params.append(f"%{email_filter}%")
             
         cursor.execute(count_query, count_params)
@@ -247,17 +266,17 @@ def get_answers_route():
         
         return jsonify({
             'success': True,
-            'data': responses,
+            'data': results,
             'pagination': {
                 'total': total_count,
                 'limit': limit,
                 'offset': offset,
-                'count': len(responses)
+                'count': len(results)
             }
         })
         
-    except sqlite3.Error as e:
-        logger.error(f"SQLite Error: {str(e)}")
+    except pymysql.Error as e:
+        logger.error(f"MySQL Error: {str(e)}")
         return jsonify({
             'success': False,
             'error': f"Database error: {str(e)}"
@@ -288,21 +307,22 @@ def get_single_answer(response_id):
                    frustration_no_buddies, frustration_social_rut,
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
-                   weekend_options, meeting_feeling, vibe_selections,
-                   last_new_thing, meeting_blocker, safe_fun_option,
-                   platform_likelihood, challenges, features, safety, scenarios,
-                   submission_date
+                   weekend_options, feel_meeting_new_people, vibe_selections,
+                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   safe_fun_way_to, platform_join_likey_to,
+                   challenges_you_face_when_trying_to_meet_new_people,
+                   likely_features_in_app, safety_features_in_app,
+                   scenarios_to_use_app_for, submission_date
             FROM desirability_form_responses
-            WHERE id = ?
+            WHERE id = %s
         """, (response_id,))
         
         result = cursor.fetchone()
         
         if result:
-            response_dict = dict(result)
             return jsonify({
                 'success': True,
-                'data': response_dict
+                'data': result
             })
         else:
             return jsonify({
@@ -310,8 +330,8 @@ def get_single_answer(response_id):
                 'error': 'Response not found'
             }), 404
             
-    except sqlite3.Error as e:
-        logger.error(f"SQLite Error: {str(e)}")
+    except pymysql.Error as e:
+        logger.error(f"MySQL Error: {str(e)}")
         return jsonify({
             'success': False,
             'error': f"Database error: {str(e)}"
@@ -350,16 +370,17 @@ def get_answers_summary():
         """)
         gender_stats = cursor.fetchall()
         
-        # Get age statistics
+        # Get age statistics - Updated for VARCHAR age field
         cursor.execute("""
             SELECT 
-                AVG(age) as avg_age,
-                MIN(age) as min_age,
-                MAX(age) as max_age
+                age as age_range,
+                COUNT(*) as count
             FROM desirability_form_responses 
-            WHERE age > 0
+            WHERE age IS NOT NULL AND age != ''
+            GROUP BY age 
+            ORDER BY COUNT(*) DESC
         """)
-        age_stats = cursor.fetchone()
+        age_stats = cursor.fetchall()
         
         # Get top cities
         cursor.execute("""
@@ -389,15 +410,15 @@ def get_answers_summary():
             'success': True,
             'summary': {
                 'total_responses': total_responses,
-                'gender_distribution': [dict(row) for row in gender_stats],
-                'age_statistics': dict(age_stats) if age_stats else {},
-                'top_cities': [dict(row) for row in city_stats],
-                'average_frustration_scores': dict(frustration_stats) if frustration_stats else {}
+                'gender_distribution': gender_stats,
+                'age_statistics': age_stats if age_stats else {},
+                'top_cities': city_stats,
+                'average_frustration_scores': frustration_stats if frustration_stats else {}
             }
         })
         
-    except sqlite3.Error as e:
-        logger.error(f"SQLite Error: {str(e)}")
+    except pymysql.Error as e:
+        logger.error(f"MySQL Error: {str(e)}")
         return jsonify({
             'success': False,
             'error': f"Database error: {str(e)}"
@@ -414,12 +435,243 @@ def get_answers_summary():
         if conn:
             conn.close()
 
+@app.route('/api/data/export', methods=['GET'])
+def export_data():
+    """Export all data in CSV or JSON format for PowerBI"""
+    conn = None
+    cursor = None
+    try:
+        format_type = request.args.get('format', 'json').lower()
+        api_key = request.args.get('api_key', '')
+        
+        # Optional: Add simple API key authentication
+        # expected_key = os.getenv('API_KEY', 'your-secret-key')
+        # if api_key != expected_key:
+        #     return jsonify({'error': 'Invalid API key'}), 401
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT id, full_name, gender, age, city, email, phone, occupation,
+                   frustration_no_buddies, frustration_social_rut,
+                   frustration_starting_convos, frustration_similar_interests,
+                   frustration_short_notice, frustration_isolated_new_place,
+                   weekend_options, feel_meeting_new_people, vibe_selections,
+                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   safe_fun_way_to, platform_join_likey_to,
+                   challenges_you_face_when_trying_to_meet_new_people,
+                   likely_features_in_app, safety_features_in_app,
+                   scenarios_to_use_app_for, submission_date
+            FROM desirability_form_responses
+            ORDER BY submission_date DESC
+        """)
+        
+        results = cursor.fetchall()
+        
+        if format_type == 'csv':
+            output = io.StringIO()
+            if results:
+                # Get column names from the first row
+                fieldnames = list(results[0].keys())
+                writer = csv.DictWriter(output, fieldnames=fieldnames)
+                writer.writeheader()
+                
+                for row in results:
+                    writer.writerow(row)
+            
+            response = Response(
+                output.getvalue(),
+                mimetype='text/csv',
+                headers={'Content-Disposition': 'attachment; filename=form_responses.csv'}
+            )
+            return response
+        
+        else:  # JSON format (default)
+            return jsonify({
+                'success': True,
+                'data': results,
+                'total_records': len(results),
+                'export_date': datetime.now().isoformat()
+            })
+            
+    except pymysql.Error as e:
+        logger.error(f"MySQL Error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f"Database error: {str(e)}"
+        }), 500
+    except Exception as e:
+        logger.error(f"Error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@app.route('/api/data/powerbi', methods=['GET'])
+def powerbi_endpoint():
+    """Specialized endpoint for PowerBI with flattened data structure"""
+    conn = None
+    cursor = None
+    try:
+        api_key = request.args.get('api_key', '')
+        
+        # Optional: Add API key authentication
+        # expected_key = os.getenv('API_KEY', 'your-secret-key')
+        # if api_key != expected_key:
+        #     return jsonify({'error': 'Invalid API key'}), 401
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get all data with flattened structure for PowerBI
+        cursor.execute("""
+            SELECT 
+                id,
+                full_name,
+                gender,
+                age,
+                city,
+                email,
+                occupation,
+                frustration_no_buddies as frustration_score_no_buddies,
+                frustration_social_rut as frustration_score_social_rut,
+                frustration_starting_convos as frustration_score_starting_conversations,
+                frustration_similar_interests as frustration_score_similar_interests,
+                frustration_short_notice as frustration_score_short_notice,
+                frustration_isolated_new_place as frustration_score_isolated_new_place,
+                weekend_options,
+                feel_meeting_new_people,
+                vibe_selections,
+                tried_new_people_last_time,
+                meeting_blocker_to_meet_new_people,
+                safe_fun_way_to,
+                platform_join_likey_to,
+                challenges_you_face_when_trying_to_meet_new_people,
+                likely_features_in_app,
+                safety_features_in_app,
+                scenarios_to_use_app_for,
+                DATE(submission_date) as submission_date,
+                TIME(submission_date) as submission_time
+            FROM desirability_form_responses
+            ORDER BY submission_date DESC
+        """)
+        
+        results = cursor.fetchall()
+        
+        # Return in PowerBI-friendly format
+        return jsonify({
+            'value': results  # PowerBI expects data in 'value' field for OData-like format
+        })
+            
+    except pymysql.Error as e:
+        logger.error(f"MySQL Error: {str(e)}")
+        return jsonify({
+            'error': f"Database error: {str(e)}"
+        }), 500
+    except Exception as e:
+        logger.error(f"Error: {str(e)}")
+        return jsonify({
+            'error': str(e)
+        }), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+@app.route('/init-db', methods=['POST'])
+def init_db_route():
+    """Manual database initialization endpoint"""
+    try:
+        init_database()
+        return jsonify({
+            'success': True,
+            'message': 'Database initialized successfully',
+            'database_host': DB_CONFIG['host'],
+            'database_name': DB_CONFIG['database']
+        })
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/health', methods=['GET'])
 def health_check():
-    """Simple health check endpoint"""
-    return jsonify({'status': 'healthy', 'database': DATABASE_PATH})
+    """Enhanced health check endpoint with database info"""
+    try:
+        # Test database connection
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Test if table exists
+        cursor.execute("""
+            SELECT COUNT(*) as table_count 
+            FROM information_schema.tables 
+            WHERE table_schema = %s AND table_name = 'desirability_form_responses'
+        """, (DB_CONFIG['database'],))
+        
+        table_result = cursor.fetchone()
+        table_exists = table_result['table_count'] > 0
+        
+        # Get record count if table exists
+        record_count = 0
+        if table_exists:
+            cursor.execute("SELECT COUNT(*) as count FROM desirability_form_responses")
+            record_count = cursor.fetchone()['count']
+        
+        cursor.close()
+        conn.close()
+        
+        return jsonify({
+            'status': 'healthy',
+            'database': {
+                'host': DB_CONFIG['host'],
+                'database': DB_CONFIG['database'],
+                'connection': 'successful',
+                'table_exists': table_exists,
+                'record_count': record_count
+            }
+        })
+        
+    except pymysql.Error as e:
+        return jsonify({
+            'status': 'error',
+            'database': {
+                'host': DB_CONFIG['host'],
+                'database': DB_CONFIG['database'],
+                'connection': 'failed',
+                'error': f"MySQL Error: {str(e)}"
+            }
+        }), 500
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'error': str(e)
+        }), 500
 
 if __name__ == '__main__':
     # Initialize database on startup
+    try:
+        init_database()
+        logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {e}")
+    
+    # Use environment PORT for production deployment
+    port = int(os.getenv('PORT', 5501))
+    debug_mode = os.getenv('FLASK_ENV') != 'production'
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
+
+# Initialize database when imported (for WSGI servers like gunicorn)
+try:
     init_database()
-    app.run(host='0.0.0.0', port=5501, debug=True)
+except Exception as e:
+    logger.error(f"Failed to initialize database on import: {e}")
