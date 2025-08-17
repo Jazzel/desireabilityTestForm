@@ -264,16 +264,20 @@ def get_answers_route():
         cursor.execute(count_query, count_params)
         total_count = cursor.fetchone()['total']
         
-        return jsonify({
-            'success': True,
-            'data': results,
-            'pagination': {
-                'total': total_count,
-                'limit': limit,
-                'offset': offset,
-                'count': len(results)
-            }
-        })
+        import json
+        return app.response_class(
+            response=json.dumps({
+                'success': True,
+                'data': results,
+                'pagination': {
+                    'total': total_count,
+                    'limit': limit,
+                    'offset': offset,
+                    'count': len(results)
+                }
+            }, sort_keys=False, default=str),
+            mimetype='application/json'
+        )
         
     except pymysql.Error as e:
         logger.error(f"MySQL Error: {str(e)}")
