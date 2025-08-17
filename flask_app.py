@@ -65,7 +65,7 @@ def init_database():
                 weekend_options TEXT,
                 feel_meeting_new_people TEXT,
                 vibe_selections TEXT,
-                tried_new_people_last_time TEXT,
+                tried_new_activity_with_someone TEXT,
                 meeting_blocker_to_meet_new_people TEXT,
                 safe_fun_way_to TEXT,
                 platform_join_likey_to TEXT,
@@ -152,7 +152,7 @@ def handle_form_submission():
                 frustration_starting_convos, frustration_similar_interests,
                 frustration_short_notice, frustration_isolated_new_place,
                 weekend_options, feel_meeting_new_people, vibe_selections,
-                tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                tried_new_activity_with_someone, meeting_blocker_to_meet_new_people,
                 safe_fun_way_to, platform_join_likey_to,
                 challenges_you_face_when_trying_to_meet_new_people,
                 likely_features_in_app, safety_features_in_app,
@@ -235,7 +235,7 @@ def get_answers_route():
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
                    weekend_options, feel_meeting_new_people, vibe_selections,
-                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   tried_new_activity_with_someone, meeting_blocker_to_meet_new_people,
                    safe_fun_way_to, platform_join_likey_to,
                    challenges_you_face_when_trying_to_meet_new_people,
                    likely_features_in_app, safety_features_in_app,
@@ -264,20 +264,16 @@ def get_answers_route():
         cursor.execute(count_query, count_params)
         total_count = cursor.fetchone()['total']
         
-        import json
-        return app.response_class(
-            response=json.dumps({
-                'success': True,
-                'data': results,
-                'pagination': {
-                    'total': total_count,
-                    'limit': limit,
-                    'offset': offset,
-                    'count': len(results)
-                }
-            }, sort_keys=False, default=str),
-            mimetype='application/json'
-        )
+        return jsonify({
+            'success': True,
+            'data': results,
+            'pagination': {
+                'total': total_count,
+                'limit': limit,
+                'offset': offset,
+                'count': len(results)
+            }
+        })
         
     except pymysql.Error as e:
         logger.error(f"MySQL Error: {str(e)}")
@@ -312,7 +308,7 @@ def get_single_answer(response_id):
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
                    weekend_options, feel_meeting_new_people, vibe_selections,
-                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   tried_new_activity_with_someone, meeting_blocker_to_meet_new_people,
                    safe_fun_way_to, platform_join_likey_to,
                    challenges_you_face_when_trying_to_meet_new_people,
                    likely_features_in_app, safety_features_in_app,
@@ -462,7 +458,7 @@ def export_data():
                    frustration_starting_convos, frustration_similar_interests,
                    frustration_short_notice, frustration_isolated_new_place,
                    weekend_options, feel_meeting_new_people, vibe_selections,
-                   tried_new_people_last_time, meeting_blocker_to_meet_new_people,
+                   tried_new_activity_with_someone, meeting_blocker_to_meet_new_people,
                    safe_fun_way_to, platform_join_likey_to,
                    challenges_you_face_when_trying_to_meet_new_people,
                    likely_features_in_app, safety_features_in_app,
@@ -552,7 +548,7 @@ def powerbi_endpoint():
                 weekend_options,
                 feel_meeting_new_people,
                 vibe_selections,
-                tried_new_people_last_time,
+                tried_new_activity_with_someone,
                 meeting_blocker_to_meet_new_people,
                 safe_fun_way_to,
                 platform_join_likey_to,
